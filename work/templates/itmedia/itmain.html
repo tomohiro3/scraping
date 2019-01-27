@@ -1,0 +1,45 @@
+<!doctype html>
+<head>
+	<title>SEARCH</title>
+	{% block script %}
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+	<!--デフォルト設定でFlaskはcss,jsの所在を、flaskアプリケーションと同じ階層にあるstaticディレクトリの中に探しに行くので下記のようなパスでよい -->
+	<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='scraping.js') }}"></script>
+  {% endblock %}
+  {% block style %}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  {% endblock %}
+
+<body>
+	<div class="input">
+		<button class="sendbutton" id="sendurlandword">
+		{% block img %}
+			<img id="title" src="{{ url_for('static', filename='itmedia.gif') }}"/>  
+		{% endblock %}
+		</button>
+		<p><input class="searchspace" maxlength="2048" type="text" id="word" placeholder="Type Keyword"></p>
+		{% block url %}
+		<p><input class="searchspace" maxlength="2048" type="text" id="url" placeholder="Type URL"></p>
+		{% endblock %}
+		</button>
+		<!-- <form method="post" action="/">
+		<p><input type="text" name="mongo"></p>
+		<p><input type="submit"></p>
+		</form> -->
+	</div>
+
+	<div class="output">
+		<p id="greet"></p>
+		<p id="message"></p>
+		<p id="result"></p>
+		<!-- <p>{{ urls }}</p> -->
+	</div>
+		<!-- <p>
+			{% for index in result %}
+					<p>{{index.head}}</p>
+					<p>{{index.url}}</p>
+			{% endfor %}
+	</p> -->
+</body>
+</head>

@@ -1,0 +1,18 @@
+{% extends 'itmedia/itmain.html' %}
+
+
+{% block script %}
+  {{ super() }}
+{% endblock %}
+
+{% block style %}
+  {{ super() }}
+{% endblock %}
+
+{% block img %}
+  <img id="other" src="{{ url_for('static', filename='search.jpg') }}"/>
+{% endblock %}
+
+{% block url %}
+  {{ super() }}
+{% endblock %}
