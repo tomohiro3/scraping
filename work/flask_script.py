@@ -15,9 +15,9 @@ app.config['SECRET_KEY'] = 'secret!'
 
 async_mode = None
 # If the connection gets disconnected in the middle,
-# new session is gonna be created, then
+# A new session is gonna be created, then
 # the server is gonna get not to send back the data to the same session's client
-# so that set ping_timeout long
+# so that set ping_timeout long not to make the socketio disconnected
 ping_timeout = 300
 socketio = SocketIO(app, async_mode=async_mode, ping_timeout=ping_timeout)
 thread = None
@@ -159,32 +159,21 @@ def sending_results(url, word):
 				if re.match(".*{}.*".format(word), a.text) and not a_text in tmp_list:
 					if not re.match(".*/.*", a_link):
 						pass
-						#print("This was passed  " + a_link)
 					elif a_link.startswith("//"):
-						#print("This url starts with // " + a_link)
 						article = protocol + a_link
-						#print("This url has been formed as " + article)
 					elif a_link.startswith("/") or a_link.startswith("./"):
-						#print("This url starts with / or ./ " + a_link)
 						article = l + re.sub(r".?/", "", a_link, count=1)
 						res = requests.get(article)
 						if res.status_code != 200:
-							#print("\n")
-							#print(res.status_code)
 							article = url + re.sub(r".?/", "", a_link, count=1)
-							#print("The status code wasn't 200, so formed the url as " + article)
 					elif re.match(r"^\w+/", a_link):
-						#print("This url starts with alphanumeric")
 						article = l + a_link
 						res = requests.get(article)
 						if res.status_code != 200:
-							#print(res.status_code)
 							article = url + a_link
-							#print("The status code wasn't 200, so formed the url as " + article)
 					else:    
 						article = a.get("href")
-						#print("This url hasn't been formed " + article)
-					
+						
 					append(a_text)
 					a_dict_list = {
 						"head": a_text,
@@ -194,8 +183,7 @@ def sending_results(url, word):
 					emit("myresponse", a_dict_list)
 			except Exception as e:
 				print(e)
-				#print("In for loop of a")
-		
+				
 		print("Nothing to be sent to you")
 	
 	emit("startcomplete", "DONE")
