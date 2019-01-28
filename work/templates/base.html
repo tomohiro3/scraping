@@ -1,20 +1,25 @@
 <!doctype html>
+<html lang=ja>
 <head>
+	<meta charset="UTF-8">
 	<title>SEARCH</title>
-	<style type="text/css">
-		div.input{ text-align:center; }
-	</style>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
 <body>
 	<div class="input">
 			<img class="title" src="{{ url_for('static', filename='search.jpg') }}"/>  
 	</div>
-	<div class="sub1">
 		<!-- flaskのviewで指定した通りにsrcを指定する必要がある?
 		@app.route("/itmedia/")としたらな、srcはitmedia -->
-		<iframe seamless src="itmedia"　width="500" height="200" scrolling="yes"></iframe>
-		<iframe seamless src="nikkei" width="500" height="200" scrolling="yes"></iframe>
-		<iframe seamless src="other" width="500" height="200" scrolling="yes"></iframe>
-		<iframe seamless src="bookmark" width="500" height="200" scrolling="yes"></iframe>
+	<div class="wrapper" style="text-align: center;" >
+		<div class="upper">
+			<iframe seamless src="itmedia" width="45%" height="288" scrolling="yes"></iframe>
+			<iframe seamless src="nikkei" width="45%" height="288" scrolling="yes"></iframe>
+		</div>
+		<div class="lower">
+			<iframe seamless src="other" width="45%" height="288" scrolling="yes"></iframe>
+			<iframe seamless src="bookmark" width="45%" height="288" scrolling="yes"></iframe>
+		</div>
 	</div>
-</body>
-</head>
+	</body>
+</html>

@@ -1,5 +1,7 @@
 <!doctype html>
+<html lang=ja>
 <head>
+	<meta charset="UTF-8">
 	<title>SEARCH</title>
 	{% block script %}
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -10,7 +12,7 @@
   {% block style %}
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
   {% endblock %}
-
+</head>
 <body>
 	<div class="input">
 		<button class="sendbutton" id="sendurlandword">
@@ -41,4 +43,4 @@
 			{% endfor %}
 	</p> -->
 </body>
-</head>
+</html>
