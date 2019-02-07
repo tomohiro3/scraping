@@ -3,10 +3,11 @@ $(document).ready(function(){
   var DisplayingSearch = setInterval(function(){
     $("#message").fadeOut(500).fadeIn(500);
   }, 1000);
-  //var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
   //var socket = io.connect('http://www.example.com');
   var socket = io.connect(location.protocol + "//" + document.domain + ':' + location.port);
-  
+  //var blankstar = "static/blankstar.jpg";
+  var n = 1;
+
   socket.on('connect', function() {
     socket.send("hi")
   });
@@ -15,10 +16,46 @@ $(document).ready(function(){
     console.log(msg);
   });
 
+  var n = 1;
   socket.on("myresponse", function(json){
-    $("#result").append("<a href=\"" + json.url + "\">" + json.head + "</a><br>");
+    // var result = document.getElementById("result");
+    // var a = document.createElement("a");
+    // a.id = n;
+    // a.href = json.url;
+    // var head = document.createTextNode(json.head);
+    // a.appendChild(head);
+    // var send = document.createElement("button");
+    // send.classList.add("sendbutton");
+    // send.setAttribute("data-target", n);
+    // var img = document.createElement("img");
+    // var path = "http://www.example.com/static/blankstar.jpg";
+    // img.src = path;
+    // send.appendChild(img);
+    // var br = document.createElement("br");
+    // var persend = send.insertAdjacentHTML("afterend", br);
+    // a.insertAdjacentHTML("afterend", persend);
+    // result.appendChild(a);
+    
+    //data属性：data-*　はxmlのように任意のマークアップを施せる
+    //button要素の中にあるdata-targetはその名の通り、targetとなる対象を指定している
+    //今回の場合はidがｎ(数字)のもの　つまり、aタグ
+    $("#result").append("<a id=\"" + n + "\" data-url=\"" + json.url + "\" data-head=\"" + json.head + 
+    "\" href=\"" + json.url + "\">" + json.head + 
+    "</a><button class=\"sendbutton\" id=\"sendunsendstar\" data-target=\"#" + n + "\"><img id=\"img" + 
+    n + "\" src=\"" + "http://www.example.com/static/blankstar.jpg\"></button><br>");
     console.log(json);
+    n++;
   });
+
+  //You gotta envoke event in a way below for buttons generated dynamically
+  $(document).on("click", "#sendunsendstar", function(){
+    //"This" here refers <button> having the sendunsendstar id
+    //.data("target") refers the <a> having the targeted id
+    //.data('url) or .data('head) is "a" tag's data-url or data-head's attribute
+    //so in this case, they're gonna be json.url and json.head 
+    console.log($($(this).data("target")).data('url'));
+    console.log($($(this).data("target")).data('head'));
+  })
 
   socket.on("startcomplete", function(msg){
     if (msg == "DONE") {
@@ -43,7 +80,7 @@ $(document).ready(function(){
     } catch(e) {
       console.log(e);
     }
-    console.log(array)
+    console.log(array);
     $("#url").val("");
     $("#word").val("");
     $("#result").empty();
@@ -52,5 +89,6 @@ $(document).ready(function(){
         $("#message").fadeOut(500).fadeIn(500);
       }, 1000);
     }
+    n = 1;
   });
 });
