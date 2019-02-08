@@ -55,7 +55,12 @@ $(document).ready(function(){
     //so in this case, they're gonna be json.url and json.head 
     console.log($($(this).data("target")).data('url'));
     console.log($($(this).data("target")).data('head'));
-  })
+    let bk_url = $($(this).data('target')).data('url');
+    let bk_head = $($(this).data('target')).data('head');
+    let bk_dict = { url:bk_url, head:bk_head};
+    socket.emit("bk_db", bk_dict);
+    //alert("Bookmarked")
+  });
 
   socket.on("startcomplete", function(msg){
     if (msg == "DONE") {

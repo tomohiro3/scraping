@@ -59,6 +59,16 @@ def index_return():
 	#templatesディレクトリの中に探しに行くので下記のようなパスでよい
 	return render_template("base.html")
 
+@socketio.on('bk_db')
+def managebk(bk_dict):
+	
+	url = bk_dict["url"]
+	head = bk_dict["head"]
+	head = head.encode("raw_unicode_escape")
+	head = head.decode("utf-8")
+	print(url)
+	print(head)
+
 @socketio.on("message")
 def initial_response(msg):
 	send("Hello!")
