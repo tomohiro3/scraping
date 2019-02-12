@@ -9,6 +9,7 @@ import requests
 import re
 import sys
 import time
+import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -24,7 +25,7 @@ thread = None
 
 app.config["MONGO_URI"] = "mongodb://localhost:27017/scrapingdb"
 mongo = PyMongo(app)
-urls = mongo.db.urls
+bookmarks = mongo.db.bookmarks
 
 @app.route("/itmedia/")
 def itmedia():
@@ -43,13 +44,13 @@ def bookmark():
 	return render_template("bookmark/bkmain.html")
 
 
-@app.route("/", methods=["POST"])
-def test_db():
-	url = request.form["mongo"]
-	url = {"subject": url}
-	urls.insert_one(url)
-	result = mongo.db.urls.find({"subject": url})
-	return render_template(("base.html"), urls=result)	
+# @app.route("/", methods=["POST"])
+# def test_db():
+# 	url = request.form["mongo"]
+# 	url = {"subject": url}
+# 	urls.insert_one(url)
+# 	result = mongo.db.urls.find({"subject": url})
+# 	return render_template(("base.html"), urls=result)	
 	
 
 
@@ -61,13 +62,14 @@ def index_return():
 
 @socketio.on('bk_db')
 def managebk(bk_dict):
-	
 	url = bk_dict["url"]
 	head = bk_dict["head"]
 	head = head.encode("raw_unicode_escape")
 	head = head.decode("utf-8")
-	print(url)
-	print(head)
+	
+	bks = {"url": url, "head": head, "date": datetime.datetime.utcnow()}
+	bks_id = bookmarks.insert_one(bks).inserted_id
+	print("Added%s", bks)
 
 @socketio.on("message")
 def initial_response(msg):

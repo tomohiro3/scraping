@@ -53,8 +53,6 @@ $(document).ready(function(){
     //.data("target") refers the <a> having the targeted id
     //.data('url) or .data('head) is "a" tag's data-url or data-head's attribute
     //so in this case, they're gonna be json.url and json.head 
-    console.log($($(this).data("target")).data('url'));
-    console.log($($(this).data("target")).data('head'));
     let bk_url = $($(this).data('target')).data('url');
     let bk_head = $($(this).data('target')).data('head');
     let bk_dict = { url:bk_url, head:bk_head};
