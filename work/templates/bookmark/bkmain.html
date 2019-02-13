@@ -13,3 +13,9 @@
 
 {% block url %}
 {% endblock %}
+
+{% block output %}
+  {% for l in list %}
+    <a href={{l.url}} class="bkoutput">{{l.head}}</a><br>
+  {% endfor %}
+{% endblock %}

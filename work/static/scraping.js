@@ -75,9 +75,9 @@ $(document).ready(function(){
 
   $("#sendurlandword").on("click", function(){
     //socket.emit("my event", {"url": $("#url").val(), "word": $("#word").val()});
-    var url = $("#url").val();
+    var link = $("#url").val();
     var word = $("#word").val();
-    var array = [url, word];
+    var array = { url: link, head: word };
     try{
       socket.emit("myevent", array);
     } catch(e) {

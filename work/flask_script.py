@@ -13,19 +13,33 @@ import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-
+app.config["MONGO_URI"] = "mongodb://localhost:27017/scrapingdb"
 async_mode = None
+ping_timeout = 300
+socketio = SocketIO(app, async_mode=async_mode, ping_timeout=ping_timeout)
+
 # If the connection gets disconnected in the middle,
 # A new session is gonna be created, then
 # the server is gonna get not to send back the data to the same session's client
 # so that set ping_timeout long not to make the socketio disconnected
-ping_timeout = 300
-socketio = SocketIO(app, async_mode=async_mode, ping_timeout=ping_timeout)
-thread = None
 
-app.config["MONGO_URI"] = "mongodb://localhost:27017/scrapingdb"
 mongo = PyMongo(app)
 bookmarks = mongo.db.bookmarks
+
+thread = None
+# @app.route("/", methods=["POST"])
+# def test_db():
+# 	url = request.form["mongo"]
+# 	url = {"subject": url}
+# 	urls.insert_one(url)
+# 	result = mongo.db.urls.find({"subject": url})
+# 	return render_template(("base.html"), urls=result)	
+	
+@app.route("/", methods=["GET"])
+def index_return():
+	#デフォルト設定でFlaskはhtmlの所在を、flaskアプリケーションと同じ階層にある
+	#templatesディレクトリの中に探しに行くので下記のようなパスでよい
+	return render_template("base.html")
 
 @app.route("/itmedia/")
 def itmedia():
@@ -41,24 +55,8 @@ def other():
 
 @app.route("/bookmark/")
 def bookmark():
-	return render_template("bookmark/bkmain.html")
-
-
-# @app.route("/", methods=["POST"])
-# def test_db():
-# 	url = request.form["mongo"]
-# 	url = {"subject": url}
-# 	urls.insert_one(url)
-# 	result = mongo.db.urls.find({"subject": url})
-# 	return render_template(("base.html"), urls=result)	
-	
-
-
-@app.route("/", methods=["GET"])
-def index_return():
-	#デフォルト設定でFlaskはhtmlの所在を、flaskアプリケーションと同じ階層にある
-	#templatesディレクトリの中に探しに行くので下記のようなパスでよい
-	return render_template("base.html")
+	bk_list = [s for s in bookmarks.find()]
+	return render_template("bookmark/bkmain.html", list=bk_list)
 
 @socketio.on('bk_db')
 def managebk(bk_dict):
@@ -67,9 +65,13 @@ def managebk(bk_dict):
 	head = head.encode("raw_unicode_escape")
 	head = head.decode("utf-8")
 	
-	bks = {"url": url, "head": head, "date": datetime.datetime.utcnow()}
-	bks_id = bookmarks.insert_one(bks).inserted_id
-	print("Added%s", bks)
+	bks = {"url": url, "head": head}
+	#To prevent duplicate update from db, 
+	#need to add upsert=True at the end and use the mongo syntax $setOnInsert
+	bookmarks.update(
+		{'head': head},
+		{'$setOnInsert': bks},
+		upsert=True)
 
 @socketio.on("message")
 def initial_response(msg):
@@ -78,8 +80,8 @@ def initial_response(msg):
 
 @socketio.on("myevent")
 def handle_message(array):
-	url = array[0]
-	word = array[1]
+	url = array["url"]
+	word = array["head"]
 
 	#if re.match(r"(^\\[A-Z].*[a-z].*)?", word):
 	# 日本語だと強制的にutf-8？にエンコードされるので、それをutf-8に再度デコード	

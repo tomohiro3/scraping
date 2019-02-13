@@ -30,12 +30,14 @@
 		</form> -->
 	</div>
 
+	{% block output %}
 	<div class="output">
 		<p id="greet"></p>
 		<p id="message"></p>
 		<p id="result"></p>
 		<!-- <p>{{ urls }}</p> -->
 	</div>
+	{% endblock %}
 		<!-- <p>
 			{% for index in result %}
 					<p>{{index.head}}</p>
