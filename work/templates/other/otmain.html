@@ -15,4 +15,9 @@
 
 {% block url %}
   {{ super() }}
+  <p><input class="searchspace" maxlength="2048" type="text" id="url" placeholder="Type URL"></p>
+{% endblock %}
+
+{% block output %}
+  {{ super() }}
 {% endblock %}

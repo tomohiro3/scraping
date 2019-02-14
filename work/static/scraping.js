@@ -6,8 +6,7 @@ $(document).ready(function(){
   //var socket = io.connect('http://www.example.com');
   var socket = io.connect(location.protocol + "//" + document.domain + ':' + location.port);
   //var blankstar = "static/blankstar.jpg";
-  var n = 1;
-
+  
   socket.on('connect', function() {
     socket.send("hi")
   });
@@ -40,7 +39,7 @@ $(document).ready(function(){
     //button要素の中にあるdata-targetはその名の通り、targetとなる対象を指定している
     //今回の場合はidがｎ(数字)のもの　つまり、aタグ
     $("#result").append("<a id=\"" + n + "\" data-url=\"" + json.url + "\" data-head=\"" + json.head + 
-    "\" href=\"" + json.url + "\">" + json.head + 
+    "\" href=\"" + json.url + "\">" + json.head + ' '　+
     "</a><button class=\"sendbutton\" id=\"sendunsendstar\" data-target=\"#" + n + "\"><img id=\"img" + 
     n + "\" src=\"" + "http://www.example.com/static/blankstar.jpg\"></button><br>");
     console.log(json);
@@ -75,7 +74,13 @@ $(document).ready(function(){
 
   $("#sendurlandword").on("click", function(){
     //socket.emit("my event", {"url": $("#url").val(), "word": $("#word").val()});
-    var link = $("#url").val();
+    if (location.pathname == '/itmedia/') {
+      var link = 'https://www.itmedia.co.jp/';
+    } else if (location.pathname == "/nikkei/") {
+      var link = 'https://www.nikkei.com/';
+    } else {
+      var link = $("#url").val();
+    }
     var word = $("#word").val();
     var array = { url: link, head: word };
     try{

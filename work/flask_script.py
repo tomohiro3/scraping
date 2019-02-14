@@ -27,6 +27,7 @@ mongo = PyMongo(app)
 bookmarks = mongo.db.bookmarks
 
 thread = None
+bk_list = [s for s in bookmarks.find()]
 # @app.route("/", methods=["POST"])
 # def test_db():
 # 	url = request.form["mongo"]
@@ -55,7 +56,7 @@ def other():
 
 @app.route("/bookmark/")
 def bookmark():
-	bk_list = [s for s in bookmarks.find()]
+	global bk_list
 	return render_template("bookmark/bkmain.html", list=bk_list)
 
 @socketio.on('bk_db')
@@ -103,6 +104,7 @@ def sending_results(url, word):
 	
 	print(url)	
 	print(word)
+
 
 	if url == "" or word == "":
 		print("”URL”　と　”キーワード”　を指定してください")
@@ -156,6 +158,7 @@ def sending_results(url, word):
 	perfect_url_list =sorted(set([u for u in url_list if not re.match(".*article.*|.*=.*", u )]))
 	tmp_list = []
 	append=tmp_list.append
+	#global bk_list
 
 	for l in perfect_url_list:
 		try:
